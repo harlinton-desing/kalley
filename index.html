@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tabla de precios y cuotas – Movistar/Kalley</title>
+  <title>Tabla de precios y cuotas – Kalley</title>
   <style>
     :root {
       --bg: #0f172a;
@@ -11,52 +11,34 @@
       --muted: #94a3b8;
       --text: #e5e7eb;
       --accent: #22d3ee;
-      --accent-2: #a78bfa;
-      --good: #34d399;
-      --warn: #facc15;
-      --blue: #38bdf8;
       --border: #1f2937;
     }
     html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
     .wrap{max-width:1200px;margin:24px auto;padding:16px}
-    .card{background:linear-gradient(180deg,#0b1220,#0c1426 60%,#0b1220);border:1px solid var(--border);border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+    .card{background:#0c1426;border:1px solid var(--border);border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
     .head{display:flex;flex-wrap:wrap;align-items:center;gap:16px;justify-content:space-between;padding:18px 18px 0}
-    h1{font-size:22px;margin:0;letter-spacing:.2px}
+    h1{font-size:22px;margin:0}
     .controls{display:flex;flex-wrap:wrap;gap:12px}
     select,button,input{background:#0b1220;border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:12px;font-weight:600}
     button{cursor:pointer}
-    button.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));border:none;color:#0b1220}
+    button.primary{background:linear-gradient(90deg,var(--accent),#a78bfa);border:none;color:#0b1220}
     .hint{color:var(--muted);font-size:12px;padding:0 18px 12px}
-    .table-container{overflow-x:auto;padding:0 12px 18px}
-    table{width:100%;border-collapse:separate;border-spacing:0 10px;min-width:900px}
+    table{width:100%;border-collapse:separate;border-spacing:0 10px}
     thead th{font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);text-align:left;padding:8px 12px}
-    tbody tr{background:rgba(255,255,255,.02)}
-    tbody td{padding:12px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);vertical-align:middle}
+    tbody tr{background:rgba(255,255,255,.02);transition:background 0.3s ease}
+    tbody td{padding:12px;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
     tbody td:first-child{border-left:1px solid var(--border);border-top-left-radius:14px;border-bottom-left-radius:14px}
     tbody td:last-child{border-right:1px solid var(--border);border-top-right-radius:14px;border-bottom-right-radius:14px}
-    .imgph{width:42px;height:42px;border-radius:10px;background:#0b1220;border:1px dashed #334155;display:flex;align-items:center;justify-content:center;color:#334155;font-size:10px}
     .mono{font-variant-numeric:tabular-nums;white-space:nowrap}
-    .price{font-weight:700;transition:background .3s ease,color .3s ease}
-    .blue{color:var(--blue)}
-    .amber{color:var(--warn)}
-    .green{color:var(--good)}
-    .flash{animation:flash .9s ease}
-    @keyframes flash{0%{background:rgba(255,255,255,0.18)}50%{background:rgba(255,255,255,0.06)}100%{background:transparent}}
-    @media print{
-      body{background:#fff;color:#000}
-      .card{box-shadow:none;border:none}
-      .controls,.hint{display:none}
-      a{color:#000}
-      @page { size: A4 landscape; margin: 1cm; }
-    }
+    .price{font-weight:700;transition:color 0.4s ease}
+    .price.azul{color:#3b82f6;}     /* Azul */
+    .price.amarillo{color:#facc15;} /* Amarillo */
+    .price.verde{color:#22c55e;}    /* Verde */
+    img{width:60px;height:60px;object-fit:cover;border-radius:10px}
     @media(max-width:768px){
-      .head{flex-direction:column;align-items:flex-start}
-      .controls{width:100%}
-      table{font-size:14px}
-      .wrap{padding:8px}
-      .card{border-radius:12px}
-      .head h1{font-size:18px}
-      .table-container{overflow-x:auto}
+      table{font-size:12px}
+      img{width:40px;height:40px}
+      h1{font-size:18px}
     }
   </style>
 </head>
@@ -67,7 +49,7 @@
         <h1>Tabla de precios y cuotas</h1>
         <div class="controls">
           <label>
-            <span class="sub">Precio según antigüedad:</span><br>
+            <span>Precio según antigüedad:</span><br>
             <select id="antigSelect">
               <option value="Precio_0a5m">0 a 5 meses</option>
               <option value="Precio_6a23m">6 a 23 meses</option>
@@ -75,16 +57,14 @@
             </select>
           </label>
           <label>
-            <span class="sub">Tasa nominal mensual</span><br>
+            <span>Tasa nominal mensual (Colombia)</span><br>
             <input id="rate" type="number" step="0.0001" value="0.0188" style="width:120px"/>
           </label>
           <button class="primary" id="btnRecalc">Recalcular</button>
-          <button onclick="downloadExcel()">Descargar Excel</button>
-          <button onclick="window.print()">Imprimir / Guardar PDF</button>
         </div>
       </div>
-      <div class="hint">Interés: <strong>1.88% nominal mensual</strong> (25.05% E.A.). Las cuotas se calculan con sistema francés.</div>
-      <div class="table-container">
+      <div class="hint">Interés: <strong>1.88% nominal mensual</strong> (25.05% E.A. en Colombia). Las cuotas se calculan con sistema francés.</div>
+      <div style="overflow:auto;padding:0 12px 18px">
         <table id="tabla">
           <thead>
             <tr>
@@ -105,34 +85,25 @@
   </div>
 
   <script>
-    // Lista completa restaurada (todas las referencias)
     const DATA = [
-      {ref:"Combo 2Und Ka Black C Plus 256GB Neg/Mor", img:"", Precio_0a5m:969900, Precio_6a23m:969900, Precio_24momas:901900, Precio_prepago:969900},
-      {ref:"COMBO KALBLACK5256GB 5G GR+TABKAL T10", img:"", Precio_0a5m:958900, Precio_6a23m:958900, Precio_24momas:916900, Precio_prepago:958900},
-      {ref:"Kalley Black 1 128Gb Azul", img:"", Precio_0a5m:299900, Precio_6a23m:299900, Precio_24momas:278900, Precio_prepago:299900},
-      {ref:"Kalley Black 1 128Gb Negro", img:"", Precio_0a5m:299900, Precio_6a23m:299900, Precio_24momas:278900, Precio_prepago:299900},
-      {ref:"Kalley Black 3 512GB Blanco", img:"", Precio_0a5m:899900, Precio_6a23m:899900, Precio_24momas:836900, Precio_prepago:899900},
-      {ref:"Kalley Black 3 512GB Morado", img:"", Precio_0a5m:899900, Precio_6a23m:899900, Precio_24momas:836900, Precio_prepago:899900},
-      {ref:"Kalley Black 3 512GB Negro", img:"", Precio_0a5m:899900, Precio_6a23m:899900, Precio_24momas:836900, Precio_prepago:899900},
-      {ref:"Kalley Black 5G 256Gb Gris", img:"", Precio_0a5m:647900, Precio_6a23m:647900, Precio_24momas:601900, Precio_prepago:647900},
-      {ref:"Kalley Black C Plus 256Gb Morado", img:"", Precio_0a5m:464900, Precio_6a23m:464900, Precio_24momas:399900, Precio_prepago:464900},
-      {ref:"Kalley Black C Plus 256Gb Negro", img:"", Precio_0a5m:464900, Precio_6a23m:464900, Precio_24momas:399900, Precio_prepago:464900},
+      {ref:"Combo 2Und Ka Black C Plus 256GB Neg/Mor", img:"imagen/combo black c plus.jpg", Precio_0a5m:969900, Precio_6a23m:969900, Precio_24momas:901900, Precio_prepago:969900},
+      {ref:"COMBO KALBLACK5256GB 5G GR+TABKAL T10", img:"imagen/combo tablet.png", Precio_0a5m:958900, Precio_6a23m:958900, Precio_24momas:916900, Precio_prepago:958900},
+      {ref:"Kalley Black 1 128Gb Azul", img:"imagen/black 1 azul.jpg", Precio_0a5m:299900, Precio_6a23m:299900, Precio_24momas:278900, Precio_prepago:299900},
+      {ref:"Kalley Black 1 128Gb Negro", img:"imagen/black 1 negro.jpg", Precio_0a5m:299900, Precio_6a23m:299900, Precio_24momas:278900, Precio_prepago:299900},
+      {ref:"Kalley Black 3 512GB Blanco", img:"imagen/black 3 blanco.jpg", Precio_0a5m:899900, Precio_6a23m:899900, Precio_24momas:836900, Precio_prepago:899900},
+      {ref:"Kalley Black 3 512GB Morado", img:"imagen/black 3 morado.jpg", Precio_0a5m:899900, Precio_6a23m:899900, Precio_24momas:836900, Precio_prepago:899900},
+      {ref:"Kalley Black 3 512GB Negro", img:"imagen/black 3 negro.jpg", Precio_0a5m:899900, Precio_6a23m:899900, Precio_24momas:836900, Precio_prepago:899900},
+      {ref:"Kalley Black 5G 256GB Gris", img:"imagen/black 5.jpg", Precio_0a5m:647900, Precio_6a23m:647900, Precio_24momas:601900, Precio_prepago:647900},
+      {ref:"Kalley Black C Plus 256GB Morado", img:"imagen/black c plus morado.jpg", Precio_0a5m:464900, Precio_6a23m:464900, Precio_24momas:399900, Precio_prepago:464900},
+      {ref:"Kalley Black C Plus 256GB Negro", img:"imagen/black c plus negro.jpg", Precio_0a5m:464900, Precio_6a23m:464900, Precio_24momas:399900, Precio_prepago:464900},
+      
     ];
 
     const COP = new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',maximumFractionDigits:0});
 
     function cuotaMensual(P, n, i){
       const r = i; 
-      if(!P || n<=0) return 0;
-      const factor = Math.pow(1+r, n);
-      return P * (r * factor) / (factor - 1);
-    }
-
-    function applyColorClass(td, option){
-      td.classList.remove('blue','amber','green');
-      if(option==='Precio_0a5m') td.classList.add('blue');
-      if(option==='Precio_6a23m') td.classList.add('amber');
-      if(option==='Precio_24momas') td.classList.add('green');
+      return P * (r * Math.pow(1+r, n)) / (Math.pow(1+r, n) - 1);
     }
 
     function build(){
@@ -141,66 +112,35 @@
       const colAntig = document.getElementById('antigSelect').value;
       const rate = parseFloat(document.getElementById('rate').value || '0.0188');
 
+      let colorClass = "azul";
+      if(colAntig === "Precio_6a23m") colorClass = "amarillo";
+      if(colAntig === "Precio_24momas") colorClass = "verde";
+
       DATA.forEach(item =>{
         const precioAntig = item[colAntig];
         const prepago = item.Precio_prepago;
-        const c6 = cuotaMensual(prepago,6,rate);
-        const c12 = cuotaMensual(prepago,12,rate);
-        const c18 = cuotaMensual(prepago,18,rate);
-        const c24 = cuotaMensual(prepago,24,rate);
+        const c6 = cuotaMensual(precioAntig,6,rate);
+        const c12 = cuotaMensual(precioAntig,12,rate);
+        const c18 = cuotaMensual(precioAntig,18,rate);
+        const c24 = cuotaMensual(precioAntig,24,rate);
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td><div class="imgph">IMG</div></td>
-          <td>${escapeHtml(item.ref)}</td>
-          <td class="mono price">${COP.format(precioAntig)}</td>
+          <td><img src="${item.img}" alt="${item.ref}"></td>
+          <td>${item.ref}</td>
+          <td class="mono price ${colorClass}">${COP.format(precioAntig)}</td>
           <td class="mono">${COP.format(prepago)}</td>
           <td class="mono">${COP.format(Math.round(c6))}</td>
           <td class="mono">${COP.format(Math.round(c12))}</td>
           <td class="mono">${COP.format(Math.round(c18))}</td>
           <td class="mono">${COP.format(Math.round(c24))}</td>
         `;
-
-        const tdPrice = tr.querySelector('.price');
-        applyColorClass(tdPrice, colAntig);
-        // Add flash animation then remove the class to keep only color
-        tdPrice.classList.add('flash');
-        tdPrice.addEventListener('animationend', ()=> tdPrice.classList.remove('flash'));
-
         tbody.appendChild(tr);
       });
     }
 
-    function escapeHtml(text){
-      return String(text).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-    }
-
-    function downloadExcel(){
-      const colAntig = document.getElementById('antigSelect').value;
-      const rate = parseFloat(document.getElementById('rate').value || '0.0188');
-      let tableHTML = `<table border='1'><tr><th>Imagen</th><th>Referencia</th><th>Precio según antigüedad</th><th>Precio prepago</th><th>Cuota 6m</th><th>Cuota 12m</th><th>Cuota 18m</th><th>Cuota 24m</th></tr>`;
-      DATA.forEach(item=>{
-        const precioAntig = item[colAntig];
-        const P = item.Precio_prepago;
-        const c6 = cuotaMensual(P,6,rate), c12 = cuotaMensual(P,12,rate), c18 = cuotaMensual(P,18,rate), c24 = cuotaMensual(P,24,rate);
-        tableHTML += `<tr><td></td><td>${escapeHtml(item.ref)}</td><td>${precioAntig}</td><td>${P}</td><td>${Math.round(c6)}</td><td>${Math.round(c12)}</td><td>${Math.round(c18)}</td><td>${Math.round(c24)}</td></tr>`;
-      });
-      tableHTML += `</table>`;
-      const blob = new Blob(["﻿", tableHTML], {type:'application/vnd.ms-excel'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'tabla_precios_cuotas.xls';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
-
     document.getElementById('btnRecalc').addEventListener('click', build);
     document.getElementById('antigSelect').addEventListener('change', build);
-
-    // initial render
     build();
   </script>
 </body>
